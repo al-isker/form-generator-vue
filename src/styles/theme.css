@@ -1,0 +1,14 @@
+:root {
+  --color-canvas: #f1faf6;
+  --color-surface: #ffffff;
+  --color-border: #b7dfcf;
+  --color-ink: #17211e;
+  --color-accent: #42b883;
+  --color-danger: #c3362b;
+  --color-status-success: #42b883;
+  --color-status-warning: #f5c45f;
+  --color-surface-rgb: 255 255 255;
+  --color-ink-rgb: 23 33 30;
+  --color-accent-rgb: 66 184 131;
+  --color-danger-rgb: 195 54 43;
+}
