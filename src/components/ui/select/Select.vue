@@ -5,28 +5,35 @@ import {
   onBeforeUnmount,
   onMounted,
   ref,
-  useId
+  useAttrs
 } from 'vue';
 import type { SelectOptionType } from '../../../types/select-option.ts';
-import FieldError from '../field-error/FieldError.vue';
-import FieldLabel from '../field-label/FieldLabel.vue';
 import SelectOption from './SelectOption.vue';
 
-const props = defineProps<{
-  label: string;
-  required?: boolean;
-  options: SelectOptionType[];
-  placeholder?: string;
-  error?: string;
-}>();
+defineOptions({
+  inheritAttrs: false
+});
 
-const model = defineModel<string | null>({ required: true });
+const props = withDefaults(
+  defineProps<{
+    id?: string;
+    required?: boolean;
+    options: SelectOptionType[];
+    placeholder?: string;
+    invalid?: boolean;
+  }>(),
+  {
+    invalid: false
+  }
+);
+
+const model = defineModel<unknown>({ required: true });
 
 const emit = defineEmits<{
   blur: [];
 }>();
 
-const fieldId = useId();
+const attrs = useAttrs();
 const root = ref<HTMLDivElement | null>(null);
 const trigger = ref<HTMLButtonElement | null>(null);
 const isOpen = ref(false);
@@ -51,7 +58,16 @@ const selectedLabel = computed(
   () => selectedOption.value?.label ?? placeholderLabel.value
 );
 
-const hasValue = computed(() => model.value !== null);
+const hasValue = computed(
+  () => model.value !== null && model.value !== undefined
+);
+
+const selectClass = computed(() => ['select', attrs.class]);
+
+const selectAttrs = computed(() => {
+  const { class: _class, ...restAttrs } = attrs;
+  return restAttrs;
+});
 
 const getSelectedIndex = () => {
   if (model.value === null) {
@@ -107,7 +123,7 @@ const moveActive = (step: number) => {
       : (activeIndex.value + step + optionsCount) % optionsCount;
 };
 
-const selectOption = (value: string | null) => {
+const selectOption = (value: unknown) => {
   model.value = value;
   closeList();
   trigger.value?.focus();
@@ -201,57 +217,43 @@ onBeforeUnmount(() => {
 
 <template>
   <div
+    v-bind="selectAttrs"
     ref="root"
-    class="field"
-    :class="{ invalid: error }"
+    :class="selectClass"
     @focusout="handleFocusout"
   >
-    <FieldLabel :for-id="fieldId" :required="required">
-      {{ label }}
-    </FieldLabel>
+    <button
+      ref="trigger"
+      :id="id"
+      class="control"
+      :class="{ empty: !hasValue }"
+      type="button"
+      :data-open="isOpen"
+      :data-invalid="invalid"
+      @click="toggleList"
+      @keydown="handleKeydown"
+    >
+      <span class="value">{{ selectedLabel }}</span>
+      <span class="chevron"></span>
+    </button>
 
-    <div class="select">
-      <button
-        ref="trigger"
-        :id="fieldId"
-        class="control"
-        :class="{ empty: !hasValue }"
-        type="button"
-        :data-open="isOpen"
-        @click="toggleList"
-        @keydown="handleKeydown"
-      >
-        <span class="value">{{ selectedLabel }}</span>
-        <span class="chevron"></span>
-      </button>
-
-      <Transition name="options">
-        <ul v-if="isOpen" class="options">
-          <SelectOption
-            v-for="(option, index) in visibleOptions"
-            :key="option.value ?? 'empty'"
-            :label="option.label"
-            :selected="option.value === model"
-            :active="index === activeIndex"
-            @pointerenter="activeIndex = index"
-            @select="selectOption(option.value)"
-          />
-        </ul>
-      </Transition>
-    </div>
-
-    <FieldError :message="error" />
+    <Transition name="options">
+      <ul v-if="isOpen" class="options">
+        <SelectOption
+          v-for="(option, index) in visibleOptions"
+          :key="index"
+          :label="option.label"
+          :selected="option.value === model"
+          :active="index === activeIndex"
+          @pointerenter="activeIndex = index"
+          @select="selectOption(option.value)"
+        />
+      </ul>
+    </Transition>
   </div>
 </template>
 
 <style scoped>
-.field {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .select {
   position: relative;
 }
@@ -289,6 +291,11 @@ onBeforeUnmount(() => {
   box-shadow: 0 0 0 4px rgb(var(--color-accent-rgb) / 14%);
 }
 
+.control[data-invalid='true'] {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 4px rgb(var(--color-danger-rgb) / 12%);
+}
+
 .value {
   flex: 1 1 auto;
   min-width: 0;
@@ -305,8 +312,10 @@ onBeforeUnmount(() => {
   flex: 0 0 9px;
   width: 9px;
   height: 9px;
-  border-right: 2px solid color-mix(in srgb, var(--color-ink) 68%, var(--color-surface));
-  border-bottom: 2px solid color-mix(in srgb, var(--color-ink) 68%, var(--color-surface));
+  border-right: 2px solid
+    color-mix(in srgb, var(--color-ink) 68%, var(--color-surface));
+  border-bottom: 2px solid
+    color-mix(in srgb, var(--color-ink) 68%, var(--color-surface));
   transform: translateY(-2px) rotate(45deg);
   transition: transform 160ms ease;
 }
@@ -346,10 +355,5 @@ onBeforeUnmount(() => {
 .options-leave-to {
   opacity: 0;
   transform: translateY(-4px);
-}
-
-.invalid .control {
-  border-color: var(--color-danger);
-  box-shadow: 0 0 0 4px rgb(var(--color-danger-rgb) / 12%);
 }
 </style>

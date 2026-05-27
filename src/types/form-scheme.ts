@@ -27,6 +27,6 @@ type CheckboxFieldType = BaseFieldType & {
 
 export type FormFieldType = TextFieldType | SelectFieldType | CheckboxFieldType;
 
-export type FormSchemaType = {
+export type FormSchemeType = {
   fields: FormFieldType[];
 };

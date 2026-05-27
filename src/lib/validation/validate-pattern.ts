@@ -1,7 +1,8 @@
-import type { FormFieldType } from '../../types/form-schema';
-
-export const validatePattern = (field: FormFieldType, value: unknown) => {
-  if (field.type === 'checkbox' || field.type === 'select' || !field.pattern) {
+export const validatePattern = (
+  field: { pattern?: string },
+  value: unknown
+) => {
+  if (!field.pattern) {
     return null;
   }
 
@@ -13,6 +14,7 @@ export const validatePattern = (field: FormFieldType, value: unknown) => {
 
   try {
     const regexp = new RegExp(field.pattern);
+
     return regexp.test(currentValue) ? null : 'неверный формат';
   } catch {
     return 'некорректный pattern в схеме';

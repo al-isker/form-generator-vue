@@ -1,6 +1,6 @@
-import type { FormSchemaType } from '../types/form-schema';
+import type { FormSchemeType } from '../types/form-scheme';
 
-export const formSchema: FormSchemaType = {
+export const defaultFormScheme: FormSchemeType = {
   fields: [
     {
       type: 'text',

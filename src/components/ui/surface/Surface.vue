@@ -5,22 +5,9 @@ defineOptions({
   inheritAttrs: false
 });
 
-const props = withDefaults(
-  defineProps<{
-    tone?: 'light' | 'dark';
-  }>(),
-  {
-    tone: 'light'
-  }
-);
-
 const attrs = useAttrs();
 
-const surfaceClass = computed(() => [
-  'surface',
-  `surface--${props.tone}`,
-  attrs.class
-]);
+const surfaceClass = computed(() => ['surface', attrs.class]);
 
 const surfaceAttrs = computed(() => {
   const { class: _class, ...restAttrs } = attrs;
@@ -38,21 +25,13 @@ const surfaceAttrs = computed(() => {
 .surface {
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  box-shadow: 0 18px 52px rgb(var(--color-ink-rgb) / 10%);
-}
-
-.surface--light {
-  padding: 24px;
   background: rgb(var(--color-surface-rgb) / 88%);
-}
-
-.surface--dark {
-  padding: 20px;
-  background: var(--color-ink);
+  box-shadow: 0 18px 52px rgb(var(--color-ink-rgb) / 10%);
+  padding: 24px;
 }
 
 @media (max-width: 820px) {
-  .surface--light {
+  .surface {
     padding: 18px;
   }
 }

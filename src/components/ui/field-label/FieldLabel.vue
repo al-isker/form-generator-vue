@@ -29,6 +29,7 @@ withDefaults(
 }
 
 .required {
+  margin-left: 1.5px;
   color: var(--color-danger);
 }
 </style>

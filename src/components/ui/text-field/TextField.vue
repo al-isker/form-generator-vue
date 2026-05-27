@@ -3,22 +3,17 @@ import { useId } from 'vue';
 import FieldError from '../field-error/FieldError.vue';
 import FieldLabel from '../field-label/FieldLabel.vue';
 
-withDefaults(
-  defineProps<{
-    inputType?: 'text' | 'email' | 'password';
-    label: string;
-    required?: boolean;
-    minLength?: number;
-    maxLength?: number;
-    pattern?: string;
-    placeholder?: string;
-    autocomplete?: string;
-    error?: string;
-  }>(),
-  {
-    inputType: 'text'
-  }
-);
+defineProps<{
+  inputType?: 'text' | 'email' | 'password';
+  label: string;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  placeholder?: string;
+  autocomplete?: string;
+  error?: string;
+}>();
 
 const model = defineModel<string>({ required: true });
 

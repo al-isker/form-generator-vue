@@ -11,9 +11,9 @@ const formattedModel = computed(() => JSON.stringify(props.model, null, 2));
 </script>
 
 <template>
-  <Surface class="block" tone="dark">
+  <Surface class="block">
     <div class="heading">
-      <h4 class="title">Live</h4>
+      <h4 class="title">Live result</h4>
     </div>
     <pre class="code">{{ formattedModel }}</pre>
   </Surface>
@@ -35,7 +35,7 @@ const formattedModel = computed(() => JSON.stringify(props.model, null, 2));
 
 .title {
   margin: 0;
-  color: var(--color-surface);
+  color: var(--color-ink);
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.2;
@@ -45,12 +45,14 @@ const formattedModel = computed(() => JSON.stringify(props.model, null, 2));
   min-height: 0;
   max-width: 100%;
   margin: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-surface) 92%, var(--color-canvas));
   overflow: auto;
-  color: var(--color-surface);
+  color: var(--color-ink);
   font-family: 'Red Hat Mono', monospace;
   font-size: 0.9rem;
   line-height: 1.55;
-  white-space: pre-wrap;
-  word-break: break-word;
+  padding: 14px;
 }
 </style>

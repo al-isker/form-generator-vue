@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import FormGenerator from './components/form-generator/FormGenerator.vue';
 import LiveBlock from './components/live-block/LiveBlock.vue';
-import SubmittedBlock from './components/submitted-block/SubmittedBlock.vue';
+import SchemeTextarea from './components/scheme-textarea/SchemeTextarea.vue';
 import Button from './components/ui/button/Button.vue';
 import Header from './components/ui/header/Header.vue';
 import Surface from './components/ui/surface/Surface.vue';
-import { formSchema } from './config/form-schema';
+import { defaultFormScheme } from './const/default-form-scheme.ts';
 import type { FormGeneratorModelType } from './types/form-generator-model.ts';
+import type { FormSchemeType } from './types/form-scheme';
 
 const formData = ref<FormGeneratorModelType>({});
-const lastSubmit = ref<FormGeneratorModelType | null>(null);
+const schemeSource = ref(JSON.stringify(defaultFormScheme, null, 2));
+const activeScheme = shallowRef<FormSchemeType>(defaultFormScheme);
 const formId = 'form-generator';
 
-const handleSubmit = (value: FormGeneratorModelType) => {
-  lastSubmit.value = value;
+const handleSchemeChange = (scheme: FormSchemeType) => {
+  activeScheme.value = scheme;
 };
 </script>
 
@@ -23,21 +25,25 @@ const handleSubmit = (value: FormGeneratorModelType) => {
     <Header class="header" />
 
     <main class="main">
+      <aside class="left-panel">
+        <SchemeTextarea
+          v-model="schemeSource"
+          class="scheme-panel"
+          @scheme-change="handleSchemeChange"
+        />
+
+        <LiveBlock :model="formData" />
+      </aside>
+
       <Surface class="form-panel">
         <FormGenerator
           v-model="formData"
           :form-id="formId"
-          :schema="formSchema"
-          @submit="handleSubmit"
+          :scheme="activeScheme"
         />
 
         <Button type="submit" :form-id="formId">Отправить</Button>
       </Surface>
-
-      <aside class="sidebar">
-        <LiveBlock :model="formData" />
-        <SubmittedBlock :submitted="Boolean(lastSubmit)" />
-      </aside>
     </main>
   </div>
 </template>
@@ -62,13 +68,14 @@ const handleSubmit = (value: FormGeneratorModelType) => {
 
 :global(button),
 :global(input),
-:global(select) {
+:global(select),
+:global(textarea) {
   font: inherit;
 }
 
 .container {
   min-height: 100vh;
-  width: min(900px, 100%);
+  width: min(1120px, 100%);
   margin: 0 auto;
   padding: 42px 20px;
 }
@@ -84,16 +91,17 @@ const handleSubmit = (value: FormGeneratorModelType) => {
   align-items: start;
 }
 
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
 .form-panel {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  gap: 32px;
 }
 
 @media (max-width: 820px) {

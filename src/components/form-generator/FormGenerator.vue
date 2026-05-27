@@ -2,11 +2,11 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { validateFormField } from '../../lib/validation';
 import type { FormGeneratorModelType } from '../../types/form-generator-model.ts';
-import type { FormFieldType, FormSchemaType } from '../../types/form-schema';
+import type { FormFieldType, FormSchemeType } from '../../types/form-scheme';
 import FieldItem from './FieldItem.vue';
 
 const props = defineProps<{
-  schema: FormSchemaType;
+  scheme: FormSchemeType;
   formId: string;
 }>();
 
@@ -32,14 +32,23 @@ const getDefaultFieldValue = (field: FormFieldType): unknown => {
 };
 
 const normalizeModel = () => {
-  const nextModel = { ...model.value };
+  const nextModel: FormGeneratorModelType = {};
   let changed = false;
 
-  for (const field of props.schema.fields) {
-    if (!(field.model in nextModel)) {
+  for (const field of props.scheme.fields) {
+    if (field.model in model.value) {
+      nextModel[field.model] = model.value[field.model];
+    } else {
       nextModel[field.model] = getDefaultFieldValue(field);
       changed = true;
     }
+  }
+
+  const currentKeys = Object.keys(model.value);
+  const nextKeys = Object.keys(nextModel);
+
+  if (currentKeys.length !== nextKeys.length) {
+    changed = true;
   }
 
   if (changed) {
@@ -47,13 +56,15 @@ const normalizeModel = () => {
   }
 };
 
-watch(() => props.schema.fields, normalizeModel, {
+watch(() => props.scheme.fields, normalizeModel, {
   deep: true,
   immediate: true
 });
 
 const getFieldValue = (field: FormFieldType) =>
-  model.value[field.model] ?? getDefaultFieldValue(field);
+  field.model in model.value
+    ? model.value[field.model]
+    : getDefaultFieldValue(field);
 
 const updateField = (modelName: string, value: unknown) => {
   model.value = {
@@ -67,14 +78,14 @@ const touchField = (modelName: string) => {
 };
 
 const errors = computed(() =>
-  props.schema.fields.reduce<Record<string, string | null>>((result, field) => {
+  props.scheme.fields.reduce<Record<string, string | null>>((result, field) => {
     result[field.model] = validateFormField(field, model.value[field.model]);
     return result;
   }, {})
 );
 
 const visibleErrors = computed(() =>
-  props.schema.fields.reduce<Record<string, string>>((result, field) => {
+  props.scheme.fields.reduce<Record<string, string>>((result, field) => {
     const error = errors.value[field.model];
 
     if (error && (touched[field.model] || submitted.value)) {
@@ -93,7 +104,7 @@ const getFieldError = (modelName: string) =>
 const validate = () => {
   submitted.value = true;
 
-  for (const field of props.schema.fields) {
+  for (const field of props.scheme.fields) {
     touched[field.model] = true;
   }
 
@@ -117,7 +128,7 @@ defineExpose({
 <template>
   <form :id="formId" class="form" novalidate @submit.prevent="handleSubmit">
     <FieldItem
-      v-for="field in schema.fields"
+      v-for="field in scheme.fields"
       :key="field.model"
       :field="field"
       :model-value="getFieldValue(field)"

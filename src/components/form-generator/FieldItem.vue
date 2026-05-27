@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { FormFieldType } from '../../types/form-schema';
+import type { FormFieldType } from '../../types/form-scheme';
 import CheckboxField from '../ui/checkbox-field/CheckboxField.vue';
 import EmailField from '../ui/email-field/EmailField.vue';
 import PasswordField from '../ui/password-field/PasswordField.vue';
-import SelectField from '../ui/select/SelectField.vue';
+import SelectField from '../ui/select-field/SelectField.vue';
 import TextField from '../ui/text-field/TextField.vue';
 
 const props = defineProps<{
@@ -24,8 +24,8 @@ const stringValue = computed({
 });
 
 const selectValue = computed({
-  get: () => (typeof props.modelValue === 'string' ? props.modelValue : null),
-  set: (value: string | null) => emit('update:modelValue', value)
+  get: () => props.modelValue,
+  set: (value: unknown) => emit('update:modelValue', value)
 });
 
 const booleanValue = computed({

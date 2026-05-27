@@ -1,11 +1,8 @@
-import type { FormFieldType } from '../../types/form-schema';
-
-export const validateMaxLength = (field: FormFieldType, value: unknown) => {
-  if (
-    field.type === 'checkbox' ||
-    field.type === 'select' ||
-    !field.maxLength
-  ) {
+export const validateMaxLength = (
+  field: { maxLength?: number },
+  value: unknown
+) => {
+  if (field.maxLength === undefined) {
     return null;
   }
 

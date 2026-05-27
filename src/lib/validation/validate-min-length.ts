@@ -1,11 +1,8 @@
-import type { FormFieldType } from '../../types/form-schema';
-
-export const validateMinLength = (field: FormFieldType, value: unknown) => {
-  if (
-    field.type === 'checkbox' ||
-    field.type === 'select' ||
-    !field.minLength
-  ) {
+export const validateMinLength = (
+  field: { minLength?: number },
+  value: unknown
+) => {
+  if (field.minLength === undefined) {
     return null;
   }
 
