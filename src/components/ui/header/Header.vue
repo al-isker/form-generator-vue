@@ -12,7 +12,7 @@
   line-height: 1;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 768px) {
   .title {
     font-size: 1.8rem;
   }

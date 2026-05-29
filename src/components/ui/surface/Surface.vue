@@ -30,7 +30,7 @@ const surfaceAttrs = computed(() => {
   padding: 24px;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 768px) {
   .surface {
     padding: 18px;
   }

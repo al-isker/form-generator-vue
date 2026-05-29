@@ -104,7 +104,7 @@ const handleSchemeChange = (scheme: FormSchemeType) => {
   gap: 32px;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 768px) {
   .container {
     padding: 28px 14px;
   }
