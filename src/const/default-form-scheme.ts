@@ -9,7 +9,7 @@ export const defaultFormScheme: FormSchemeType = {
       required: true,
       minLength: 2,
       maxLength: 40,
-      placeholder: 'Анна',
+      placeholder: 'Артемий',
       autocomplete: 'given-name'
     },
     {

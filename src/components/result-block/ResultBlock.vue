@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import type { FormGeneratorModelType } from '../../types/form-generator-model.ts';
 import Surface from '../ui/surface/Surface.vue';
+import FieldLabel from '../ui/field-label/FieldLabel.vue';
 
 const props = defineProps<{
   model: FormGeneratorModelType;
@@ -12,9 +13,8 @@ const formattedModel = computed(() => JSON.stringify(props.model, null, 2));
 
 <template>
   <Surface class="block">
-    <div class="heading">
-      <h4 class="title">Live result</h4>
-    </div>
+    <FieldLabel as="h4" class="title">Результатус</FieldLabel>
+
     <pre class="code">{{ formattedModel }}</pre>
   </Surface>
 </template>
@@ -23,22 +23,11 @@ const formattedModel = computed(() => JSON.stringify(props.model, null, 2));
 .block {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-}
-
-.heading {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
+  gap: 8px;
 }
 
 .title {
   margin: 0;
-  color: var(--color-ink);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.2;
 }
 
 .code {

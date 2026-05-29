@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <h1 class="title">Form Generator Vue</h1>
+    <h1 class="title">Форм генераторус</h1>
   </header>
 </template>
 

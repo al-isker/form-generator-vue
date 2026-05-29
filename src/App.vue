@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, shallowRef } from 'vue';
 import FormGenerator from './components/form-generator/FormGenerator.vue';
-import LiveBlock from './components/live-block/LiveBlock.vue';
+import ResultBlock from './components/result-block/ResultBlock.vue';
 import SchemeTextarea from './components/scheme-textarea/SchemeTextarea.vue';
 import Button from './components/ui/button/Button.vue';
 import Header from './components/ui/header/Header.vue';
@@ -32,7 +32,7 @@ const handleSchemeChange = (scheme: FormSchemeType) => {
           @scheme-change="handleSchemeChange"
         />
 
-        <LiveBlock :model="formData" />
+        <ResultBlock :model="formData" />
       </aside>
 
       <Surface class="form-panel">

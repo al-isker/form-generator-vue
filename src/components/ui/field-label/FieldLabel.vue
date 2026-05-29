@@ -1,7 +1,7 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    as?: 'label' | 'span';
+    as?: keyof HTMLElementTagNameMap;
     forId?: string;
     required?: boolean;
   }>(),
