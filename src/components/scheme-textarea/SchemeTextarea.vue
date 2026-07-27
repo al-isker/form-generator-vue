@@ -37,7 +37,7 @@ watch(model, handleSchemeSourceChange, {
   <Surface class="scheme-textarea">
     <TextareaField
       v-model="model"
-      label="Схемус"
+      label="Form scheme"
       textarea-class="scheme-control"
       required
       :error="error"

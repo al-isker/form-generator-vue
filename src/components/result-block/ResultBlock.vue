@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { FormGeneratorModelType } from '../../types/form-generator-model.ts';
-import Surface from '../ui/surface/Surface.vue';
 import FieldLabel from '../ui/field-label/FieldLabel.vue';
+import Surface from '../ui/surface/Surface.vue';
 
 const props = defineProps<{
   model: FormGeneratorModelType;
@@ -13,7 +13,7 @@ const formattedModel = computed(() => JSON.stringify(props.model, null, 2));
 
 <template>
   <Surface class="block">
-    <FieldLabel as="h4" class="title">Результатус</FieldLabel>
+    <FieldLabel as="h4" class="title">Результат</FieldLabel>
 
     <pre class="code">{{ formattedModel }}</pre>
   </Surface>
